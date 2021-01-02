@@ -1,12 +1,15 @@
 import { Reducer, useEffect, useReducer } from 'react'
 import { Events, Userstate } from 'tmi.js'
+import { SYSTEM_CHANNEL } from '~constants'
 import { client } from './gateway'
+import { systemEmitter } from './system'
 
 export enum MessageType {
   Action = 'action',
   Chat = 'chat',
   Cheer = 'cheer',
   Redeem = 'redeem',
+  System = 'system',
 }
 
 export interface IChatMessage {
@@ -27,7 +30,9 @@ const useChat = (limit = 50, onMessage?: (m: IChatMessage) => any) => {
   useEffect(() => {
     const listener: Listener = (channel, userstate, message) => {
       const type =
-        userstate['message-type'] === 'action'
+        channel === SYSTEM_CHANNEL
+          ? MessageType.System
+          : userstate['message-type'] === 'action'
           ? MessageType.Action
           : userstate['message-type'] === 'chat'
           ? MessageType.Chat
@@ -41,11 +46,13 @@ const useChat = (limit = 50, onMessage?: (m: IChatMessage) => any) => {
       if (typeof onMessage === 'function') onMessage(m)
     }
 
+    systemEmitter.addListener('message', listener)
     for (const event of events) {
       client.addListener(event, listener)
     }
 
     return () => {
+      systemEmitter.removeListener('message', listener)
       for (const event of events) {
         client.removeListener(event, listener)
       }

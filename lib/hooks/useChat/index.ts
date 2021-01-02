@@ -8,3 +8,4 @@ export const useChat: typeof useChatClient = (...args) => {
 
 export { client } from './gateway'
 export type { IChatMessage } from './hook'
+export { sendSystemMessage } from './system'
