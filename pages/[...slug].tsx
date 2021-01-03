@@ -1,13 +1,16 @@
 import { NextPage } from 'next'
-import Head from 'next/head'
+import { useChat } from '~hooks/useChat'
 
-const App: NextPage = () => (
-  <>
-    <Head>
-      <title>Root Page</title>
-    </Head>
-    <div>Root Page</div>
-  </>
-)
+const Multichat: NextPage = () => {
+  const messages = useChat()
 
-export default App
+  return (
+    <>
+      {messages.map(message => (
+        <div key={message.userstate.id}>{message.text}</div>
+      ))}
+    </>
+  )
+}
+
+export default Multichat
