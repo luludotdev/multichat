@@ -15,7 +15,7 @@ export enum MessageType {
 export interface IChatMessage {
   channel: string
   userstate: Userstate
-  message: string
+  text: string
   type: MessageType
 }
 
@@ -40,7 +40,7 @@ const useChat = (limit = 50, onMessage?: (m: IChatMessage) => any) => {
           ? MessageType.Redeem
           : MessageType.Cheer
 
-      const m: IChatMessage = { channel, userstate, message, type }
+      const m: IChatMessage = { channel, userstate, text: message, type }
       dispatch(m)
 
       if (typeof onMessage === 'function') onMessage(m)
