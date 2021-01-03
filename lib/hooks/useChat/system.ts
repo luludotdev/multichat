@@ -1,5 +1,6 @@
 import { EventEmitter } from 'eventemitter3'
 import { Userstate } from 'tmi.js'
+import { v4 as uuid } from 'uuid'
 import { SYSTEM_CHANNEL } from '~constants'
 
 interface ISystemEmitter {
@@ -9,6 +10,7 @@ interface ISystemEmitter {
 class SystemEmitter extends EventEmitter<ISystemEmitter> {
   public send(message: string) {
     const state: Userstate = {
+      id: uuid(),
       'display-name': 'Multichat',
     }
 
